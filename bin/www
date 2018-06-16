@@ -12,7 +12,7 @@ const http = require('http')
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.MAILER_PORT || '3020')
+const port = normalizePort(process.env.GMAILER_PORT || '3020')
 app.set('port', port)
 
 /**
