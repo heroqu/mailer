@@ -7,8 +7,7 @@
 function assertNotBlank(attr, obj) {
   const { [attr]: value } = obj
   if (!value || !`${value}`.trim()) {
-    const msg = `${attr} can't be blank`
-    throw new Error(msg)
+    throw new Error(`${attr} can't be blank`)
   }
 }
 
