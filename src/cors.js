@@ -12,9 +12,13 @@ WHITELIST = WHITELIST || []
 
 const corsOptions = {
   origin: function(origin, callback) {
-    if (WHITELIST.indexOf(origin) !== -1) {
+    if (
+      // origin must match our whitelist
+      WHITELIST.indexOf(origin) !== -1
+    ) {
       callback(null, true)
     } else {
+      console.log(`origin: ${origin}`)
       callback(
         createError(403, `Origin is not allowed by cors policy: ${origin}`)
       )
