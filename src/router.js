@@ -3,31 +3,43 @@ const createError = require('http-errors')
 const router = express.Router()
 
 const cors = require('./cors')
-const assertNotBlank = require('./assertNotBlank')
 const html2text = require('./html2text')
+const assertNotBlank = require('./assertNotBlank')
+const assertIsValidEmail = require('./assertIsValidEmail')
 const mailer = require('./mailer')
 
 const { TO } = require('./config')
 
+/**
+ * Health checker route
+ */
 router.get('/', function(req, res, next) {
-  res.send(200, 'The mailer is here, POST your message to /send')
-  next(null)
+  res
+    .status(200)
+    .send('The mailer is here, use POST at /send to sumbit a message')
 })
 
+/**
+ * Message submission route
+ */
 router.post('/send', cors(), function(req, res, next) {
   // Attibutes we are interested in here
   const attrs = ['name', 'email', 'subject', 'message']
 
-  // extract these attibutes from req.body,
-  // sanitize each value
-  // and finally assert it's not blank
   let params
   try {
     params = attrs.reduce((acc, attr) => {
+      // extract these attibutes from req.body,
+      // sanitize each value
       acc[attr] = html2text(req.body[attr])
+
+      // assert the attribute is not blank
       assertNotBlank(attr, acc)
       return acc
     }, {})
+
+    // additionally assert the email is valid
+    assertIsValidEmail(params.email)
   } catch ({ message }) {
     return next(createError(400, message))
   }
@@ -63,7 +75,6 @@ ${message}
         return next(err)
       }
       res.status(201).send(response)
-      res.end()
     })
   } catch (err) {
     return next(err)
