@@ -1,4 +1,6 @@
-FROM node:10.4.1-alpine as builder
+ARG DISTRO=node:10.5.0-alpine
+
+FROM $DISTRO as builder
 
 # for some npm packages to be able to build natively
 # we need node-gyp
@@ -14,15 +16,13 @@ RUN npm install
 # no need anymore, as we start a new image anyway
 # RUN apk del .gyp
 
-FROM node:10.4.1-alpine as deploy
+FROM $DISTRO as deploy
 
-LABEL maintainer="Heroqu <hero.qub@gmail.com>"
+ENV GMAILER_PORT=3020
 
 WORKDIR /usr/src/app
 
-COPY --from=builder /usr/src/app ./
-
-ENV GMAILER_PORT=3020
+COPY --from=builder /usr/src/app/ ./
 
 COPY src .
 

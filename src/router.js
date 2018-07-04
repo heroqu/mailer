@@ -72,7 +72,7 @@ ${message}
     const transporter = mailer.createTransport()
     transporter.sendMail(sendOpts, (err, response) => {
       if (err) {
-        return next(err)
+        res.status(503).send(response)
       }
       res.status(201).send(response)
     })
