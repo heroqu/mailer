@@ -2,7 +2,7 @@ const express = require('express')
 const createError = require('http-errors')
 const router = express.Router()
 
-const cors = require('./cors')
+// const cors = require('./cors')
 const html2text = require('./html2text')
 const assertNotBlank = require('./assertNotBlank')
 const assertIsValidEmail = require('./assertIsValidEmail')
@@ -22,7 +22,8 @@ router.get('/', function(req, res, next) {
 /**
  * Message submission route
  */
-router.post('/send', cors(), function(req, res, next) {
+// router.post('/send', cors(), function(req, res, next) {
+router.post('/send', function(req, res, next) {
   // Attibutes we are interested in here
   const attrs = ['name', 'email', 'subject', 'message']
 

@@ -12,7 +12,6 @@ app.use(express.json())
 
 app.use(cors())
 
-// app.use('/', router)
 app.use(router)
 
 // catch 404 and forward to error handler
