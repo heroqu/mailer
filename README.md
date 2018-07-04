@@ -2,11 +2,16 @@
 
 Simple HTTP server to send emails through Gmail SMTP.
 
-## Main features
+## The purpose
 
-Designed as a light weight backend to help sending emails from a frontend. It is implemented as an **Express** server that listens for POST requests at `/send` URL.
+Designed as a light weight backend to help sending emails from a frontend, e.g. some contact form on a website.
+
 
 ## How it works
+
+It is implemented as an **Express** server that listens for POST requests at `/send` URL.
+
+The algorithm is the following:
 
 - Extracts `{ name, email, subject, message }` params from the request body
 - Performs validations:
