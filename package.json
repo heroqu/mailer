@@ -1,6 +1,6 @@
 {
   "name": "gmailer",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Simple express server for sending emails through gmail smtp",
   "main": "bin/www",
   "scripts": {

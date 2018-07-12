@@ -5,10 +5,14 @@ const logger = require('morgan')
 const cors = require('./cors')
 const router = require('./router')
 
+const ignoreFavicon = require('./ignoreFavicon')
+
 const app = express()
 
 app.use(logger('dev'))
 app.use(express.json())
+
+app.use(ignoreFavicon)
 
 app.use(cors())
 
