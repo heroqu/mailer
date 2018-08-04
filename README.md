@@ -41,3 +41,79 @@ All the configuration settings, including CORS whitelist, auth credentials, tran
 A sample Dockerfile is provided to run this server inside Docker container.
 
 Both base image (node:alpine) and the PORT can be set as environment variables (see `ARG` and `ENV` statements), but if not, the default values are used.
+
+## Local setup
+
+### 1. Clone the repo.
+
+``` shell
+# go to some directory, run:
+git clone git@github.com:heroqu/mailer.git
+# go to that dir
+cd mailer
+```
+
+### 2. Install dependencies
+
+``` shell
+npm install -save    
+
+# OR     
+
+yarn
+```
+
+### 3. Make configuration
+
+Now you have to create .env file and fill it with valid configuration values. You can start by copying example:
+
+``` shell
+cp .env.sample .env
+```
+
+In this file you should specify:
+
+- desired port, default is 3020
+- TO: address - the receiving email where all the messages should end up (should be one of your own probably, we don't spam, do we).
+- transport: 'mailgun' or 'gmail'
+- credentials for either mailgun or gmail
+
+### 4. Run
+
+When you are set, you can run it:
+
+``` shell
+npm start    
+
+# OR   
+
+yarn start
+```
+
+Alternatively, if you want to see more info on screen you can run in debug mode:
+
+``` shell
+npm run dev    
+
+# OR    
+
+yarn dev
+```
+
+### 5. Check health in web browser
+
+open http://localhost:3020 (if your port is still 3020)
+
+and see the hello message:
+
+"The mailer is here, use POST at __/send__ to sumbit a message"
+
+### 6. Test send with curl
+
+or, you can send a real message with curl:
+
+```
+curl -H "Content-Type: application/json" -X POST -d '{"name":"John","email":"doe@gmail.com" ,"subject":"❗✍ from curl","message":"Can you see this?!"}' http://localhost:3020/send
+```
+
+if the email address is really yours, you are online and the transport credentials and everything is OK, you should receive a new letter in your inbox by now.

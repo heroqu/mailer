@@ -11,7 +11,7 @@ const WHITELIST = `${process.env.MAILER_WHITELIST}`.split(',')
 const TO = process.env.MAILER_TO
 
 // mailgun OR gmail
-const NODEMAILER_TRANSPORT = process.env.MAILER_NODEMAILER_TRANSPORT
+const NODEMAILER_TRANSPORT = process.env.MAILER_NODEMAILER_TRANSPORT || 'gmail'
 
 // Mailgun
 const MAILGUN_API_KEY = process.env.MAILER_MAILGUN_API_KEY
