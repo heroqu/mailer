@@ -2,13 +2,16 @@ const express = require('express')
 const createError = require('http-errors')
 const router = express.Router()
 
-// const cors = require('./cors')
+const debug = require('debug')
+const debugError = debug('mailer:error')
+const debugSend = debug('mailer:send')
+
 const html2text = require('./html2text')
 const assertNotBlank = require('./assertNotBlank')
 const assertIsValidEmail = require('./assertIsValidEmail')
-const mailer = require('./mailer')
 
-const { TO } = require('./config')
+const makeMessage = require('./makeMessage')
+const createTransport = require('./createTransport')
 
 /**
  * Health checker route
@@ -22,9 +25,13 @@ router.get('/', function(req, res, next) {
 /**
  * Message submission route
  */
-// router.post('/send', cors(), function(req, res, next) {
 router.post('/send', function(req, res, next) {
-  // Attibutes we are interested in here
+  /**
+   * Extract, sanitize and validate parameters required
+   * to compose a email message object:
+   *    'name', 'email', 'subject', 'message'
+   */
+
   const attrs = ['name', 'email', 'subject', 'message']
 
   let params
@@ -42,42 +49,32 @@ router.post('/send', function(req, res, next) {
     // additionally assert the email is valid
     assertIsValidEmail(params.email)
   } catch ({ message }) {
+    debugError(`Error preparing/validating email params:\n`, message)
     return next(createError(400, message))
   }
 
-  const { name, email, subject, message } = params
-
-  const fullEmail = `"${name}" &lt;${email}&gt;`
-
-  const sendOpts = {
-    to: TO,
-    subject: subject,
-    from: { name: name, address: email },
-    // Unfortunately specifying `from:` attribute here
-    // is living in an ideal world. In realtiy it doesn't
-    // do much as gmail does always maliciously replace
-    // it with the email used in authentication.
-    // Needless to say that gmail doesn't respect the
-    // innocent `replyTo` attribute either.
-    // So we have to resort to embedding the real sender
-    // address into the message body.
-    html: `Sent by: <a href='mailto:${fullEmail}'>${fullEmail}</a>
-<br>
-<br>
-<pre>
-${message}
-</pre>`
-  }
+  /**
+   * Create mail object and try to send it with Nopdemailer
+   * using one of the transports
+   */
 
   try {
-    const transporter = mailer.createTransport()
-    transporter.sendMail(sendOpts, (err, response) => {
+    debugSend('params', params)
+
+    const sendOptions = makeMessage(params)
+
+    const transporter = createTransport()
+    transporter.sendMail(sendOptions, (err, response) => {
       if (err) {
+        debugError(`Error: transporter.sendMail:`, err)
         res.status(503).send(response)
+        return
       }
+      debugSend(`Success: transporter.sendMail: response:`, response)
       res.status(201).send(response)
     })
   } catch (err) {
+    debugError(err)
     return next(err)
   }
 })
