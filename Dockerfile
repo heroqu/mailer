@@ -1,4 +1,4 @@
-ARG DISTRO=node:10.6.0-alpine
+ARG DISTRO=node:10.7.0-alpine
 
 FROM $DISTRO as builder
 
@@ -9,23 +9,21 @@ RUN apk add --no-cache --virtual .gyp python make
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package*.json yarn*.lock ./
 
-RUN npm install
-
-# no need anymore, as we start a new image anyway
-# RUN apk del .gyp
+# RUN npm i
+RUN yarn
 
 FROM $DISTRO as deploy
 
-ENV GMAILER_PORT=3020
+ENV MAILER_PORT=3020
 
 WORKDIR /usr/src/app
 
 COPY --from=builder /usr/src/app/ ./
 
-COPY src .
+COPY . .
 
-EXPOSE $GMAILER_PORT
+EXPOSE $MAILER_PORT
 
 CMD [ "node", "bin/www" ]
