@@ -1,38 +1,40 @@
-# Gmailer
+# Mailer
 
-Simple HTTP server to send emails through Gmail SMTP.
+Little server, exposing an HTTP API for sending email messages.
 
-## The purpose
+Designed as a light weight backend to help sending emails from a frontend, e.g. site's contact form. It takes care of dispatching and effectively hides authentication credentials from the client.
 
-Designed as a light weight backend to help sending emails from a frontend, e.g. some contact form on a website.
+Based on Express and [Nodemailer](https://www.npmjs.com/package/nodemailer) and have a simple API: it listens for POST requests at `/send` route.
 
+## Transports supported
+
+Two transport options are available:
+- Gmail
+  - sends SMTP requests to specified Gmail account.
+- [Mailgun](https://www.mailgun.com/)
+  - sends HTTP requests to the MAIL API of this provider.
 
 ## How it works
 
-It is implemented as an **Express** server that listens for POST requests at `/send` URL.
+To deliver a message, client has to make a POST request with `{ name, email, subject, message }` parameters in the body. When a new request arrives, server does the following:
 
-The algorithm is the following:
-
-- Extracts `{ name, email, subject, message }` params from the request body
+- Extracts { name, email, subject, message } params from the request body
 - Performs validations:
   - Validates that no parameter is blank
-  - Validates that `email` parameter look like a valid email,
+  - Validates that email parameter look like a valid email,
   - If any of these validations fail, sends an HTTP response with 400 status and appropriate message
 - Sanitizes each parameter by removing possible html tags
-- Creates an email message object and tries to send it with Nodemailer package through Gmail SMTP
-- If Nodemailer fails to dispatch the email, responds to the client with the error, reported by Nodemailer.
+- Creates an email message object
+- Choose the transport (Mailgun or Gmail) and try to send the message through it with [Nodemailer](https://www.npmjs.com/package/nodemailer)
+- If Nodemailer fails to dispatch the email, returns Nodemailer's error to the client.
 
 ## CORS policy
 
-Because the client using this server can be a frontend, and because such a frontend can be running on a different port and/or domain, then a CORS policy is applied (with Express middleware) to avoid blocking cross origin requests by browser.
-
-CORS options use the *whitelist* of where the server can accept the send mail requests from.
+Because this http server runs separately from main http server of the site, it listens at a different address, so the CORS policy is applied (with [cors](https://www.npmjs.com/package/cors) Express middleware) to avoid blocking cross origin requests by browser. CORS is configured with a whitelist of where the server can accept requests from.
 
 ## Configuration
 
-Both CORS whitelist and SMTP credentials for Nodemailer are taken from environment variables.
-
-See `.envrc.sample` file, which is an example of setting all the required ENV VARS.
+All the configuration settings, including CORS whitelist, auth credentials, transport type and server port, are read from environment variables and an be set either directly or through one of .env files (which are then parsed and applied by [dotenv](https://www.npmjs.com/package/dotenv) utility).
 
 ## Dockerization
 
