@@ -12,7 +12,7 @@ WHITELIST = WHITELIST || []
 
 const corsOptions = {
   origin: function(origin, callback) {
-    debug(`CORS  OK: origin: ${origin}`)
+    debug(`CORS: origin: ${origin}`)
 
     if (
       // allow requests with no origin

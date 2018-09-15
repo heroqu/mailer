@@ -1,6 +1,6 @@
 {
   "name": "mailer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description":
     "Simple HTTP server for sending emails through mailgun or gmail",
   "main": "bin/www",
