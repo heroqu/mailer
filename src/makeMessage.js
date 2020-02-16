@@ -8,7 +8,7 @@ function makeMessage({ name, email, subject, message }) {
     to: TO,
     subject: subject,
     from: { name: name, address: email },
-    html: htmlTemplate({ name, email, body: message })
+    html: htmlTemplate({ name, email, body: message }),
   }
 
   return sendOpts

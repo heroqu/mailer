@@ -1,4 +1,4 @@
-ARG DISTRO=node:10.7.0-alpine
+ARG DISTRO=node:13.8-alpine
 
 FROM $DISTRO as builder
 

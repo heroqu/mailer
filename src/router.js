@@ -64,6 +64,7 @@ router.post('/send', function(req, res, next) {
     const sendOptions = makeMessage(params)
 
     const transporter = createTransport()
+
     transporter.sendMail(sendOptions, (err, response) => {
       if (err) {
         debugError(`Error: transporter.sendMail:`, err)

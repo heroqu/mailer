@@ -1,8 +1,7 @@
 {
   "name": "mailer",
-  "version": "1.0.1",
-  "description":
-    "Simple HTTP server for sending emails through mailgun or gmail",
+  "version": "1.0.2",
+  "description": "Simple HTTP server for sending emails via mailgun, sendinblue, gmail or smtp",
   "main": "bin/www",
   "scripts": {
     "start": "node ./bin/www",
@@ -22,18 +21,20 @@
     "backend",
     "gmail",
     "mailgun",
+    "sendinblue",
     "smtp"
   ],
   "author": "Heroqu",
   "license": "MIT",
   "dependencies": {
-    "cors": "^2.8.4",
-    "debug": "^3.1.0",
-    "dotenv": "^6.0.0",
-    "express": "^4.16.3",
-    "http-errors": "^1.7.0",
-    "morgan": "^1.9.0",
-    "nodemailer": "^4.6.7",
-    "nodemailer-mailgun-transport": "^1.4.0"
+    "cors": "^2.8.5",
+    "debug": "^4.1.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "http-errors": "^1.7.3",
+    "morgan": "^1.9.1",
+    "nodemailer": "^6.4.2",
+    "nodemailer-mailgun-transport": "^2.0.0",
+    "nodemailer-sendinblue-transport": "^1.2.3"
   }
 }

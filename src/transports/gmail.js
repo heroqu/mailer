@@ -4,8 +4,8 @@ const transporterOpts = {
   service: 'gmail',
   auth: {
     user: GMAIL_SENDER,
-    pass: GMAIL_PASS
-  }
+    pass: GMAIL_PASS,
+  },
 }
 
 module.exports = transporterOpts

@@ -1,3 +1,5 @@
+'use strict'
+
 /**
  * Decorate base cors function with our options injected
  */
@@ -27,9 +29,9 @@ const corsOptions = {
 
     debug(`CORS: origin is not allowed: ${origin}`)
     callback(
-      createError(403, `Origin is not allowed by cors policy: ${origin}`)
+      createError(403, `Origin is not allowed by cors policy: ${origin}`),
     )
-  }
+  },
 }
 
 function cors() {
