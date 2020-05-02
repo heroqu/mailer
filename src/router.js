@@ -17,9 +17,7 @@ const createTransport = require('./createTransport')
  * Health checker route
  */
 router.get('/', function(req, res, next) {
-  res
-    .status(200)
-    .send('The mailer is here, use POST at /send to sumbit a message')
+  res.status(200).send('The mailer is here')
 })
 
 /**
@@ -54,7 +52,7 @@ router.post('/send', function(req, res, next) {
   }
 
   /**
-   * Create mail object and try to send it with Nopdemailer
+   * Create mail object and try to send it with Nodemailer
    * using one of the transports
    */
 

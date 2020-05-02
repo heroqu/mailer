@@ -6,13 +6,16 @@ Designed as a light weight backend to help sending emails from a frontend, e.g. 
 
 Based on Express and [Nodemailer](https://www.npmjs.com/package/nodemailer) and have a simple API: it listens for POST requests at `/send` route.
 
-## Transports supported
+## Delivery methods
 
-Two transport options are available:
+Several mail transport options are supported:
+
+- SMTP
 - Gmail
   - sends SMTP requests to specified Gmail account.
-- [Mailgun](https://www.mailgun.com/)
-  - sends HTTP requests to the MAIL API of this provider.
+- Dedicated HTTP Mail API providers:
+  - [Mailgun](https://mailgun.com)
+  - [Sendinblue](https://https://sendinblue.com)
 
 ## How it works
 
@@ -30,11 +33,25 @@ To deliver a message, client has to make a POST request with `{ name, email, sub
 
 ## CORS policy
 
-Because this http server runs separately from main http server of the site, it listens at a different address, so the CORS policy is applied (with [cors](https://www.npmjs.com/package/cors) Express middleware) to avoid blocking cross origin requests by browser. CORS is configured with a whitelist of where the server can accept requests from.
+The server support CORS. The local cors route is based on Express middleware from [cors npm module](https://www.npmjs.com/package/cors) and implements the following logic:
 
-## Configuration
+One can specify the list of allowed origins in environment variable (**.env** and **.env.production** files are supported too):
 
-All the configuration settings, including CORS whitelist, auth credentials, transport type and server port, are read from environment variables and an be set either directly or through one of .env files (which are then parsed and applied by [dotenv](https://www.npmjs.com/package/dotenv) utility).
+```shell
+MAILER_WHITELIST=http://example.com,http://www.example.com
+```
+
+with comma separated list of URLs. This list is then **_url-parsed_** and turned into hostnames only:
+
+```js
+const whitelist = ['example.com', 'www.example.com']
+```
+
+When CORS request is received, the origin under examination is turned into a hostname before the whitelist checking.
+
+E.g, let the origin URL be `http://subdomain.example.com/some/page`. Then its hostname is `subdomain.example.com`, which is checked against `['example.com', 'www.example.com']` - which makes the CORS check fail, as there is no match.
+
+The algorithm is protocol agnostic, so both http and https origin are treated equally.
 
 ## Dockerization
 
@@ -46,7 +63,7 @@ Both base image (node:alpine) and the PORT can be set as environment variables (
 
 ### 1. Clone the repo.
 
-``` shell
+```shell
 # go to some directory, run:
 git clone git@github.com:heroqu/mailer.git
 # go to that dir
@@ -55,58 +72,47 @@ cd mailer
 
 ### 2. Install dependencies
 
-``` shell
-npm install -save    
+```shell
+npm install -save
 
-# OR     
+# OR
 
 yarn
 ```
 
-### 3. Make configuration
+### 3. Configuration
 
-Now you have to create .env file and fill it with valid configuration values. You can start by copying example:
-
-``` shell
-cp .env.sample .env
-```
-
-In this file you should specify:
-
-- desired port, default is 3020
-- TO: address - the receiving email where all the messages should end up (should be one of your own probably, we don't spam, do we).
-- transport: 'mailgun' or 'gmail'
-- credentials for either mailgun or gmail
+Configuration settings, including CORS whitelist, transport type, transport credentials and server port - all are read from environment variables and can be set either directly or through **.env** or **.env.production** files, which are parsed by [dotenv](https://www.npmjs.com/package/dotenv) (Look in the **.env.sample** file for details).
 
 ### 4. Run
 
-When you are set, you can run it:
+When vars are ready, one cat run the mailer:
 
-``` shell
-npm start    
+```shell
+npm start
 
-# OR   
+# OR
 
 yarn start
 ```
 
 Alternatively, if you want to see more info on screen you can run in debug mode:
 
-``` shell
-npm run dev    
+```shell
+npm run dev
 
-# OR    
+# OR
 
 yarn dev
 ```
 
-### 5. Check health in web browser
+### 5. Health check in web browser
 
 open http://localhost:3020 (if your port is still 3020)
 
 and see the hello message:
 
-"The mailer is here, use POST at __/send__ to sumbit a message"
+"The mailer is here, use POST at **/send** to sumbit a message"
 
 ### 6. Test send with curl
 

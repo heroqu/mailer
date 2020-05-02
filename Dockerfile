@@ -1,4 +1,4 @@
-ARG DISTRO=node:13.8-alpine
+ARG DISTRO=node:13-alpine
 
 FROM $DISTRO as builder
 
@@ -11,8 +11,8 @@ WORKDIR /usr/src/app
 
 COPY package*.json yarn*.lock ./
 
-# RUN npm i
-RUN yarn
+# RUN npm ci
+RUN yarn install --frozen-lockfile
 
 FROM $DISTRO as deploy
 
