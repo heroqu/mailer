@@ -112,14 +112,14 @@ open http://localhost:3020 (if your port is still 3020)
 
 and see the hello message:
 
-"The mailer is here, use POST at **/send** to sumbit a message"
+"The mailer is here"
 
-### 6. Test send with curl
+### 6. Try to send with curl
 
-or, you can send a real message with curl:
+Then one can also try to send a real message with curl:
 
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"name":"John","email":"doe@gmail.com" ,"subject":"❗✍ from curl","message":"Can you see this?!"}' http://localhost:3020/send
+curl -H "Content-Type: application/json" -X POST -d '{"name":"Donald","email":"marshall@gmail.com" ,"subject":"❗✍ from curl","message":"Can you see this?!"}' http://localhost:3020/send
 ```
 
 if the email address is really yours, you are online and the transport credentials and everything is OK, you should receive a new letter in your inbox by now.
