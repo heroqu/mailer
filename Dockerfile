@@ -11,7 +11,6 @@ WORKDIR /usr/src/app
 
 COPY package*.json yarn*.lock ./
 
-# RUN npm ci
 RUN yarn install --frozen-lockfile
 
 FROM $DISTRO as deploy

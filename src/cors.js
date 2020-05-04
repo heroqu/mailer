@@ -27,8 +27,6 @@ const corsOptions = {
   origin: function(origin, callback) {
     debug(`CORS: origin: ${origin}`)
 
-    console.log(`CORS: origin: ${origin}`)
-
     if (
       // allow requests with no origin
       // (like mobile apps or curl requests)
