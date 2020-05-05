@@ -27,8 +27,8 @@ To deliver a message, client has to make a POST request with `{ name, email, sub
   - Validates that email parameter look like a valid email,
   - If any of these validations fail, sends an HTTP response with 400 status and appropriate message
 - Sanitizes each parameter by removing possible html tags
-- Creates an email message object
-- Choose the transport (Mailgun or Gmail) and try to send the message through it with [Nodemailer](https://www.npmjs.com/package/nodemailer)
+- Creates an email *message object* (in terms of Nodemailer)
+- Choose one of the transports (according to config: SMTP/Gmail/Mailgun/Sendinblue) and try to send the message through it with [Nodemailer](https://www.npmjs.com/package/nodemailer)
 - If Nodemailer fails to dispatch the email, returns Nodemailer's error to the client.
 
 ## CORS policy
