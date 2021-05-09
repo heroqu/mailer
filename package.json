@@ -36,6 +36,6 @@
     "nodemailer": "^6.4.2",
     "nodemailer-mailgun-transport": "^2.0.0",
     "nodemailer-sendinblue-transport": "^1.2.3",
-    "url-parse": "^1.4.7"
+    "url-parse": "^1.5.0"
   }
 }
